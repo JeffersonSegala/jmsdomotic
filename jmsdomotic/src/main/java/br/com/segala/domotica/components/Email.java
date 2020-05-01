@@ -13,6 +13,11 @@ public class Email {
 	private Environment env;
 	
 	public void sendSimpleMail(String message, String... toAdress) {
+		if ( toAdress.length == 0 || toAdress[0].isEmpty() ) {
+			return;
+		}
+		
+		System.out.println("Sending email...");
 		try {
 			SimpleEmail email = new SimpleEmail();
 			email.setHostName(env.getProperty("email.smtp.host"));

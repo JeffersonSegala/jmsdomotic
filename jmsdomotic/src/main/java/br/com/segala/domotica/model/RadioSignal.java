@@ -2,16 +2,16 @@ package br.com.segala.domotica.model;
 
 public class RadioSignal {
 
-	private Integer received;
+	private Integer data;
 	private Integer bits;
 	private Integer protocol;
 
-	public Integer getReceived() {
-		return received;
+	public Integer getData() {
+		return data;
 	}
 
-	public void setReceived(Integer received) {
-		this.received = received;
+	public void setData(Integer data) {
+		this.data = data;
 	}
 
 	public Integer getBits() {

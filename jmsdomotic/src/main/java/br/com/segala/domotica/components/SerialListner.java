@@ -10,7 +10,7 @@ import java.util.Enumeration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.com.segala.domotica.services.NotificationService;
+import br.com.segala.domotica.services.SensorService;
 import br.com.segala.domotica.utils.DateUtil;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -29,7 +29,7 @@ public class SerialListner implements SerialPortEventListener {
 	};
 	
 	@Autowired
-	private NotificationService notificationService;
+	private SensorService sensorService;
 	
 	/**
 	 * A BufferedReader which will be fed by a InputStreamReader converting the
@@ -106,7 +106,7 @@ public class SerialListner implements SerialPortEventListener {
 				String inputLine = input.readLine();
 				System.out.println("Serial Event: " + DateUtil.format(new Date()) + " > " + inputLine);
 				new Thread(() -> {
-					notificationService.sensorTriggered(inputLine);
+					sensorService.sensorTriggered(inputLine);
 				}).start();
 			} catch (Exception e) {
 				System.err.println(e.toString());
@@ -176,5 +176,5 @@ public class SerialListner implements SerialPortEventListener {
 			e.printStackTrace();
 		}
 	}
-
+	
 }

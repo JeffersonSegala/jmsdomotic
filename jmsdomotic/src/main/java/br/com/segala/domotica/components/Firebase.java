@@ -20,6 +20,11 @@ public class Firebase {
 	private Environment env;
 
 	public void pushNotification(String message, String... toAdress) {
+		if ( toAdress.length == 0 ) {
+			return;
+		}
+		
+		System.out.println("Pushing notification...");
 		for (String to : toAdress) {
 			try {
 				RestTemplate restTemplate = new RestTemplate();
@@ -35,7 +40,7 @@ public class Firebase {
 	
 				ResponseEntity<String> result = restTemplate.postForEntity(uri, request, String.class);
 	
-				System.out.println(result.getStatusCodeValue());
+				System.out.println("Push notification: " + result.getStatusCodeValue());
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}

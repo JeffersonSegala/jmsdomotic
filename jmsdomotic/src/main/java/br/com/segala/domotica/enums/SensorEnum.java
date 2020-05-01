@@ -15,8 +15,10 @@ public enum SensorEnum {
 	
 	CONTROLE_2_A(5409960, "Controle 2 Armando"),
 	CONTROLE_2_D(5409956, "Controle 2 Disarmando"),
+	CONTROLE_2_P(5409953, "Controle 2 Parcial"),
+	CONTROLE_2_S(5409954, "Controle 2 Sonoro"),
 	
-	SENSOR_TESTE(5680262, "Sensor teste");
+	MOVIMENTO_1(5680262, "Movimento 1");
 	
 	private Integer rfid;
 	private String description;
