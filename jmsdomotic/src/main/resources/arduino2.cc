@@ -9,7 +9,7 @@
 RCSwitch mySwitch = RCSwitch();
 
 int ledPin =  13; //atribui o pino 13 a variável ledPin 
-int buzzerPin =  12; 
+int buzzerPin =  5; 
 char data;
 bool isSoundActive = false;
 
@@ -46,19 +46,22 @@ void loop() {
       if (data == '1') {
         isSoundActive = true;
         for (int i = 0; i < 5; i++) {
-          digitalWrite(buzzerPin, HIGH);
+          analogWrite(buzzerPin, 200);
           delay(500);
-          digitalWrite(buzzerPin, LOW);
+          analogWrite(buzzerPin, 0);
           delay(1000);
         }
       } else if (data == '2') {
         isSoundActive = false;
-        digitalWrite(buzzerPin, LOW);
+        analogWrite(buzzerPin, 0);
       }
   }
   
    if ( isSoundActive ) {
-      digitalWrite(buzzerPin, HIGH);
+      analogWrite(buzzerPin, 200);
+      delay(100);
+      analogWrite(buzzerPin, 25);
+      delay(100);
    }
 
 }

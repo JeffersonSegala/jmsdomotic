@@ -22,7 +22,8 @@ public class SerialListner implements SerialPortEventListener {
 	
 	SerialPort serialPort;
 	/** The port we're normally going to use. */
-	private static final String PORT_NAMES[] = { "/dev/tty.usbserial-A9007UX1", // Mac OS X
+	private static final String[] PORT_NAMES = { 
+			"/dev/tty.usbserial-A9007UX1", // Mac OS X
 			"/dev/ttyACM0", // Raspberry Pi
 			"/dev/ttyUSB0", // Linux
 			"COM3", // Windows
@@ -43,7 +44,7 @@ public class SerialListner implements SerialPortEventListener {
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
 
-	public SerialListner () throws Exception {
+	public SerialListner () {
 		iniciarComunicacaoSerial();
 	}
 	
@@ -105,9 +106,9 @@ public class SerialListner implements SerialPortEventListener {
 			try {
 				String inputLine = input.readLine();
 				System.out.println("Serial Event: " + DateUtil.format(new Date()) + " > " + inputLine);
-				new Thread(() -> {
-					sensorService.sensorTriggered(inputLine);
-				}).start();
+				new Thread(() -> 
+					sensorService.sensorTriggered(inputLine)
+				).start();
 			} catch (Exception e) {
 				System.err.println(e.toString());
 			}
@@ -115,9 +116,10 @@ public class SerialListner implements SerialPortEventListener {
 		// Ignore all the other eventTypes, but you should consider the other ones.
 	}
 
-	public void iniciarComunicacaoSerial() throws Exception {
+	public void iniciarComunicacaoSerial() {
 		this.initialize();
 		Thread t = new Thread() {
+			@Override
 			public void run() {
 				// the following line will keep this app alive for 1000 seconds,
 				// waiting for events to occur and responding to them (printing incoming

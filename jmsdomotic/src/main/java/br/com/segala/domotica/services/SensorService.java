@@ -23,7 +23,7 @@ public class SensorService {
 	private String lastInput;
 	private Long lastNotification = 0l;
 	private boolean isArmed = false;
-	private boolean isWithSound = false;
+	private boolean isWithSound = true;
 	
 	private List<SensorEnum> armList = new ArrayList<SensorEnum>() {
 		private static final long serialVersionUID = -8947393649362123297L;
@@ -44,6 +44,7 @@ public class SensorService {
 	{ 
     	add(SensorEnum.CONTROLE_2_S);
     }};
+    
 	
 	public void sensorTriggered (String input) {
 		if (isSpam(input)) {
@@ -54,38 +55,52 @@ public class SensorService {
 		}
 
 		RadioSignal rs = StringUtil.jsonToObject(input, RadioSignal.class);
-		SensorEnum sensor= SensorEnum.sensor(rs.getData());
+		SensorEnum sensor = SensorEnum.sensor(rs.getData());
+		if (isUnknownSensor(sensor)) {
+			return;
+		}
 		
-		if (isArming(rs)) {
+		if (isArming(sensor)) {
 			isArmed = true;
 			notificationService.pushNotification(buildMessage());
 			
-		} else if (isTogglingSound(rs)) {	
+		} else if (isTogglingSound(sensor)) {	
 			isWithSound = !isWithSound;
 			notificationService.pushNotification(buildMessage());
 			
-		} else if (isDisarming(rs)) {
+		} else if (isDisarming(sensor)) {
 			isArmed = false;
 			isWithSound = false;
-			serialListner.write(2);
+			deactivateAudubleAlarm();
 			notificationService.pushNotification(buildMessage());
 			
 		} else if (isArmed) {
 			if (isWithSound) {
-				serialListner.write(1);
+				activateAdibleAlarm();
 			}
 			notificationService.notify(sensor);
 		}
 		
+	}
+
+	private boolean isUnknownSensor(SensorEnum sensor) {
+		return sensor == null;
+	}
+
+	private void deactivateAudubleAlarm() {
+		serialListner.write(2);
+	}
+
+	private void activateAdibleAlarm() {
+		serialListner.write(1);
 	}
 	
 	private String buildMessage() {
 		StringBuilder message = new StringBuilder();
 		message.append("Alarme ");
 		if (isArmed) {
+			message.append(isWithSound ? "peew peew peew " : "silencioso ");
 			message.append("ativado ");
-			message.append(isWithSound ? "com " : "sem ");
-			message.append("som.");
 		} else {
 			message.append("desativado ");
 		}
@@ -93,16 +108,16 @@ public class SensorService {
 		return message.toString();
 	}
 
-	private boolean isDisarming(RadioSignal rs) {
-		return disarmList.contains(SensorEnum.sensor(rs.getData()));
+	private boolean isDisarming(SensorEnum sensor) {
+		return disarmList.contains(sensor);
 	}
 
-	private boolean isArming(RadioSignal rs) {
-		return armList.contains(SensorEnum.sensor(rs.getData()));
+	private boolean isArming(SensorEnum sensor) {
+		return armList.contains(sensor);
 	}
 	
-	private boolean isTogglingSound(RadioSignal rs) {
-		return soundList.contains(SensorEnum.sensor(rs.getData()));
+	private boolean isTogglingSound(SensorEnum sensor) {
+		return soundList.contains(sensor);
 	}
 
 	private boolean isSpam(String input) {

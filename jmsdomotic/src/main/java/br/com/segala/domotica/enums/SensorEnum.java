@@ -1,5 +1,9 @@
 package br.com.segala.domotica.enums;
 
+import java.util.Date;
+
+import br.com.segala.domotica.utils.DateUtil;
+
 public enum SensorEnum {
 
 	FRENTE(2614286, "Porta da frente"),
@@ -35,7 +39,7 @@ public enum SensorEnum {
 			}
 		}
 		
-		System.out.println("Rfid desconhecido: " + rfid);
+		System.out.println("Unknown Rfid: " + DateUtil.format(new Date()) + " > " + rfid);
 		return null;
 	}
 
