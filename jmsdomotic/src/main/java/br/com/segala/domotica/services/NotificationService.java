@@ -37,8 +37,8 @@ public class NotificationService {
 		message.append(" em ");
 		message.append(DateUtil.format(new Date()));
 		
-		sendEmail(message.toString());
-		
 		pushNotification(message.toString());
+
+		sendEmail(message.toString());
 	}
 }

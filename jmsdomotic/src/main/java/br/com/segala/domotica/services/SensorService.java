@@ -23,7 +23,6 @@ public class SensorService {
 	private String lastInput;
 	private Long lastNotification = 0l;
 	private boolean isArmed = false;
-	private boolean isWithSound = true;
 	
 	private List<SensorEnum> armList = new ArrayList<SensorEnum>() {
 		private static final long serialVersionUID = -8947393649362123297L;
@@ -39,13 +38,6 @@ public class SensorService {
     	add(SensorEnum.CONTROLE_2_D);
     }};
     
-    private List<SensorEnum> soundList = new ArrayList<SensorEnum>() {
-		private static final long serialVersionUID = 2620548947011846150L;
-	{ 
-    	add(SensorEnum.CONTROLE_2_S);
-    }};
-    
-	
 	public void sensorTriggered (String input) {
 		if (isSpam(input)) {
 			return;
@@ -62,22 +54,17 @@ public class SensorService {
 		
 		if (isArming(sensor)) {
 			isArmed = true;
-			notificationService.pushNotification(buildMessage());
-			
-		} else if (isTogglingSound(sensor)) {	
-			isWithSound = !isWithSound;
+			doABeep();
 			notificationService.pushNotification(buildMessage());
 			
 		} else if (isDisarming(sensor)) {
 			isArmed = false;
-			isWithSound = false;
+			doABeep();
 			deactivateAudubleAlarm();
 			notificationService.pushNotification(buildMessage());
 			
 		} else if (isArmed) {
-			if (isWithSound) {
-				activateAdibleAlarm();
-			}
+			activateAdibleAlarm();
 			notificationService.notify(sensor);
 		}
 		
@@ -95,16 +82,13 @@ public class SensorService {
 		serialListner.write(1);
 	}
 	
+	private void doABeep() {
+		serialListner.write(3);
+	}
+	
 	private String buildMessage() {
 		StringBuilder message = new StringBuilder();
-		message.append("Alarme ");
-		if (isArmed) {
-			message.append(isWithSound ? "peew peew peew " : "silencioso ");
-			message.append("ativado ");
-		} else {
-			message.append("desativado ");
-		}
-		
+		message.append("Alarme ").append(isArmed ? "ativado" : "desativado");
 		return message.toString();
 	}
 
@@ -116,10 +100,6 @@ public class SensorService {
 		return armList.contains(sensor);
 	}
 	
-	private boolean isTogglingSound(SensorEnum sensor) {
-		return soundList.contains(sensor);
-	}
-
 	private boolean isSpam(String input) {
 		return input.equals(lastInput) && System.currentTimeMillis() - lastNotification < 10000;
 	}

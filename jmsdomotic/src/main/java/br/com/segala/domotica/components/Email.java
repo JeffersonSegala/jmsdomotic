@@ -17,7 +17,7 @@ public class Email {
 			return;
 		}
 		
-		System.out.println("Sending email...");
+		System.out.println("Sending emails to ..." + toAdress);
 		try {
 			SimpleEmail email = new SimpleEmail();
 			email.setHostName(env.getProperty("email.smtp.host"));

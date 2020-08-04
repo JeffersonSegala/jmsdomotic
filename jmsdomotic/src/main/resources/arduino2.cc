@@ -1,7 +1,7 @@
  /*
   Simple example for receiving
-  
   https://github.com/sui77/rc-switch/
+  ATENCAO Fazer download da biblioteca RCSwitch ATENCAO
 */
 
 #include <RCSwitch.h>
